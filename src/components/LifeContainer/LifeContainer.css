@@ -1,0 +1,54 @@
+.LifeContainer {
+  color: #555;
+  margin: 40px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.LifeHeader {
+  margin-top: 25px;
+  align-items: flex-end;
+  min-width: 180px;
+  margin-bottom: 20px;
+}
+
+.TitleMain {
+  font-weight: bold;
+  font-size: 180%;
+}
+
+.TitleSub {
+  font-size: 140%;
+}
+
+.GenCount {
+  margin-top: 20px;
+  font-size: 400%;
+  flex-grow: 1;
+  font-weight: bold;
+  color: #0a8;
+}
+
+.SimControls {
+  margin-top: 30px;
+  margin-bottom: 60px;
+  font-size: 180%;
+}
+
+.SimControls div {
+  margin-bottom: 15px;
+}
+
+.ResizeControls input {
+  font-size: 150%;
+  padding: 5px;
+  width: 140px;
+}
+
+.ResizeControls label {
+  font-size: 100%;
+}
+
+.ResizeControls div {
+  margin-bottom: 10px;
+}
