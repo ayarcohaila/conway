@@ -1,3 +1,9 @@
+/**
+ * initialize matrix
+ * @param {number} w
+ * @param {number} h
+ * @returns {array} matrix array
+ */
 function initializeMatrix(w, h) {
   const matrix = [];
   let r = 0;
@@ -13,6 +19,13 @@ function initializeMatrix(w, h) {
   return matrix;
 }
 
+/**
+ * create new board
+ * @param {number} w
+ * @param {number} h
+ * @param {array} liveCells
+ * @returns {array} new board matrix array
+ */
 export function createNewBoard(w, h, liveCells) {
   let newBoard = initializeMatrix(w, h);
   if (liveCells) {
@@ -21,6 +34,11 @@ export function createNewBoard(w, h, liveCells) {
   return newBoard;
 }
 
+/**
+ * clone board
+ * @param {array} board
+ * @returns {array} new board matrix array
+ */
 export function cloneBoard(board) {
   const nextBoard = [];
   for (let r = 0; r < board.length; r += 1) {
@@ -32,6 +50,13 @@ export function cloneBoard(board) {
   return nextBoard;
 }
 
+/**
+ * handle resize event and produce new board
+ * @param {array} board
+ * @param {number} w
+ * @param {number} h
+ * @returns {array} next board matrix array
+ */
 export function resizeBoard(board, w, h) {
   const nextBoard = [];
   const wLimit = Math.max(board[0].length, w);
@@ -63,10 +88,12 @@ export function resizeBoard(board, w, h) {
   return nextBoard;
 }
 
-//
-// how small can the board be made without
-// eliminating any live cells
-//
+/**
+ * how small can the board be made without
+ * eliminating any live cells
+ * @param {array} board
+ * @returns {array} minimum dimension
+ */
 export function getMinimumAllowableDimensions(board) {
   let rMax = 0;
   let cMax = 0;
@@ -81,10 +108,23 @@ export function getMinimumAllowableDimensions(board) {
   return [cMax + 1, rMax + 1];
 }
 
+/**
+ * how small can the board be made without
+ * eliminating any live cells
+ * @param {array} board
+ * @returns {array} minimum dimension
+ */
 function doesCellsContainCell(cells, r, c) {
   return cells.filter(cell => cell[0] === r && cell[1] === c).length > 0;
 }
 
+/**
+ * set cell values to board
+ * @param {array} board
+ * @param {array} cells
+ * @param {number} value
+ * @returns {array} next board
+ */
 export function setCells(board, cells, value) {
   const nextBoard = [];
   if (value !== 0 && value !== 1) {
@@ -103,6 +143,13 @@ export function setCells(board, cells, value) {
   return nextBoard;
 }
 
+/**
+ * calculate neighbor
+ * @param {number} r
+ * @param {number} c
+ * @param {array} board
+ * @returns {number} neighbor count
+ */
 function getLiveNeighborCount(r, c, board) {
   let lnc = 0;
   for (let rI = r - 1; rI <= r + 1; rI += 1) {
@@ -120,6 +167,11 @@ function getLiveNeighborCount(r, c, board) {
   return lnc;
 }
 
+/**
+ * handle step event
+ * @param {array} board
+ * @returns {object} board info
+ */
 export function step(board) {
   const nextBoard = [];
   let cellChangeCount = 0;
