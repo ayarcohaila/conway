@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Button from 'react-bootstrap/lib/Button';
 import LifeBoard from '../LifeBoard';
 import './LifeContainer.css';
 import config from '../../config';
@@ -16,17 +17,8 @@ import {
 class LifeContainer extends Component {
   constructor(props) {
     super(props);
-    this.handleStep = this.handleStep.bind(this);
-    this.handleResetBoard = this.handleResetBoard.bind(this);
-    this.handlePlay = this.handlePlay.bind(this);
-    this.handlePause = this.handlePause.bind(this);
-    this.handleWidthChange = this.handleWidthChange.bind(this);
-    this.handleHeightChange = this.handleHeightChange.bind(this);
-    this.handleToggleCellStartValue = this.handleToggleCellStartValue.bind(
-      this
-    );
     this.state = {
-      requestedBoardWidth: this.props.board[0].length
+      requestedBoardWidth: props.board[0].length
     };
   }
 
@@ -36,11 +28,11 @@ class LifeContainer extends Component {
     }
   }
 
-  hasStarted() {
+  hasStarted = () => {
     return this.props.generation > 0;
-  }
+  };
 
-  runSteps() {
+  runSteps = () => {
     if (
       this.props.isPlaying &&
       !this.props.isConcluded &&
@@ -49,33 +41,33 @@ class LifeContainer extends Component {
       this.props.step();
       setTimeout(this.runSteps.bind(this), this.props.tickDelay);
     }
-  }
+  };
 
-  handlePlay(e) {
+  handlePlay = e => {
     e.preventDefault();
     if (!this.props.isConcluded) {
       this.props.play();
     }
-  }
+  };
 
-  handlePause(e) {
+  handlePause = e => {
     e.preventDefault();
     this.props.pause();
-  }
+  };
 
-  handleStep(e) {
+  handleStep = e => {
     e.preventDefault();
     if (!this.props.isPlaying) {
       this.props.step();
     }
-  }
+  };
 
-  handleResetBoard(e) {
+  handleResetBoard = e => {
     e.preventDefault();
     this.props.resetBoard();
-  }
+  };
 
-  handleWidthChange(e) {
+  handleWidthChange = e => {
     const requestedBoardWidth = Number(e.target.value);
     this.props.resizeBoard(
       Math.max(
@@ -84,9 +76,9 @@ class LifeContainer extends Component {
       ),
       this.props.board.length
     );
-  }
+  };
 
-  handleHeightChange(e) {
+  handleHeightChange = e => {
     const requestedBoardHeight = Number(e.target.value);
     this.props.resizeBoard(
       this.props.board[0].length,
@@ -95,23 +87,16 @@ class LifeContainer extends Component {
         this.props.minBoardHeight
       )
     );
-  }
+  };
 
-  handleToggleCellStartValue(r, c) {
+  handleToggleCellStartValue = (r, c) => {
     this.props.toggleCellStartValue(r, c);
-  }
+  };
 
   render() {
-    const board = this.props.board;
-    const generation = this.props.generation;
-    const handlePlay = this.handlePlay;
-    const handleStep = this.handleStep;
-    const handlePause = this.handlePause;
-    const handleResetBoard = this.handleResetBoard;
-    const handleWidthChange = this.handleWidthChange;
-    const handleHeightChange = this.handleHeightChange;
-    const handleToggleCellStartValue = this.handleToggleCellStartValue;
-    const concludedStyle = this.props.isConcluded ? { color: '#900' } : null;
+    const { board, generation, isConcluded } = this.props;
+    const concludedStyle = isConcluded ? { color: '#900' } : null;
+
     return (
       <div className="LifeContainer">
         <div className="LifeHeader">
@@ -124,20 +109,22 @@ class LifeContainer extends Component {
           </div>
           <div className="SimControls">
             <div>
-              <a
-                onClick={handlePlay}
-                role="button"
+              <Button
+                bsStyle="primary"
+                bsSize="large"
+                onClick={this.handlePlay}
                 tabIndex="0"
                 title="Run the simulation"
               >
                 <span className="glyphicon glyphicon-play" aria-label="Play" />
                 Play
-              </a>
+              </Button>
             </div>
             <div>
-              <a
-                onClick={handlePause}
-                role="button"
+              <Button
+                bsStyle="primary"
+                bsSize="large"
+                onClick={this.handlePause}
                 tabIndex="0"
                 title="Pause the simultation"
               >
@@ -146,12 +133,13 @@ class LifeContainer extends Component {
                   aria-label="Pause"
                 />
                 Pause
-              </a>
+              </Button>
             </div>
             <div>
-              <a
-                onClick={handleStep}
-                role="button"
+              <Button
+                bsStyle="primary"
+                bsSize="large"
+                onClick={this.handleStep}
                 tabIndex="0"
                 title="Advance by 1 step"
               >
@@ -160,12 +148,13 @@ class LifeContainer extends Component {
                   aria-label="Step"
                 />
                 Step
-              </a>
+              </Button>
             </div>
             <div>
-              <a
-                onClick={handleResetBoard}
-                role="button"
+              <Button
+                bsStyle="primary"
+                bsSize="large"
+                onClick={this.handleResetBoard}
                 tabIndex="0"
                 title="Reset to initial state"
               >
@@ -174,36 +163,36 @@ class LifeContainer extends Component {
                   aria-label="Reset"
                 />
                 Reset
-              </a>
+              </Button>
             </div>
           </div>
           <div className="ResizeControls">
             <form>
               <div>
                 <label htmlFor="widthInput">Width</label>
-                <span>: {this.props.board[0].length}</span>
+                <span>: {board[0].length}</span>
                 <div>
                   <input
                     id="widthInput"
                     type="range"
                     min={config.INITIAL_MIN_BOARD_WIDTH}
                     max={config.INITIAL_MAX_BOARD_WIDTH}
-                    onChange={handleWidthChange}
-                    value={this.props.board[0].length}
+                    onChange={this.handleWidthChange}
+                    value={board[0].length}
                   />
                 </div>
               </div>
               <div>
                 <label htmlFor="heightInput">Height</label>
-                <span>: {this.props.board.length}</span>
+                <span>: {board.length}</span>
                 <div>
                   <input
                     id="heightInput"
                     type="range"
                     min={config.INITIAL_MIN_BOARD_HEIGHT}
                     max={config.INITIAL_MAX_BOARD_HEIGHT}
-                    onChange={handleHeightChange}
-                    value={this.props.board.length}
+                    onChange={this.handleHeightChange}
+                    value={board.length}
                   />
                 </div>
               </div>
@@ -213,13 +202,31 @@ class LifeContainer extends Component {
         <div className="LifeBoardContainer">
           <LifeBoard
             board={board}
-            toggleCellStartValue={handleToggleCellStartValue}
+            toggleCellStartValue={this.handleToggleCellStartValue}
           />
         </div>
       </div>
     );
   }
 }
+
+LifeContainer.propTypes = {
+  play: PropTypes.func.isRequired,
+  pause: PropTypes.func.isRequired,
+  step: PropTypes.func.isRequired,
+  resetBoard: PropTypes.func.isRequired,
+  resizeBoard: PropTypes.func.isRequired,
+  toggleCellStartValue: PropTypes.func.isRequired,
+  generation: PropTypes.number.isRequired,
+  board: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+  minBoardWidth: PropTypes.number.isRequired,
+  maxBoardWidth: PropTypes.number.isRequired,
+  minBoardHeight: PropTypes.number.isRequired,
+  maxBoardHeight: PropTypes.number.isRequired,
+  tickDelay: PropTypes.number.isRequired,
+  isConcluded: PropTypes.bool.isRequired,
+  isPlaying: PropTypes.bool.isRequired
+};
 
 const mapStateToProps = state => ({
   board: state.life.board,
@@ -241,24 +248,6 @@ const mapDispatchToProps = dispatch => ({
   resizeBoard: (w, h) => dispatch(resizeBoard(w, h)),
   toggleCellStartValue: (r, c) => dispatch(toggleCellStartValue(r, c))
 });
-
-LifeContainer.propTypes = {
-  play: PropTypes.func.isRequired,
-  pause: PropTypes.func.isRequired,
-  step: PropTypes.func.isRequired,
-  resetBoard: PropTypes.func.isRequired,
-  resizeBoard: PropTypes.func.isRequired,
-  toggleCellStartValue: PropTypes.func.isRequired,
-  generation: PropTypes.number.isRequired,
-  board: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
-  minBoardWidth: PropTypes.number.isRequired,
-  maxBoardWidth: PropTypes.number.isRequired,
-  minBoardHeight: PropTypes.number.isRequired,
-  maxBoardHeight: PropTypes.number.isRequired,
-  tickDelay: PropTypes.number.isRequired,
-  isConcluded: PropTypes.bool.isRequired,
-  isPlaying: PropTypes.bool.isRequired
-};
 
 export default connect(
   mapStateToProps,

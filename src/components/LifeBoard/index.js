@@ -2,17 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class LifeBoard extends Component {
-  constructor(props) {
-    super(props);
-    this.handleCellClick = this.handleCellClick.bind(this);
-  }
-
-  handleCellClick(r, c) {
+  handleCellClick = (r, c) => {
     this.props.toggleCellStartValue(r, c);
-  }
+  };
 
   render() {
-    const handleCellClick = this.handleCellClick;
     const board = this.props.board || [[]];
     const w = board[0].length;
     const h = board.length;
@@ -43,7 +37,7 @@ class LifeBoard extends Component {
         width={pixelsPerCell}
         height={pixelsPerCell}
         fill={cell.fill}
-        onClick={() => handleCellClick(cell.r, cell.c)}
+        onClick={() => this.handleCellClick(cell.r, cell.c)}
       />
     ));
     return (

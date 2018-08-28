@@ -10,12 +10,19 @@ import {
 import { actionTypes } from './actions';
 import config from './config';
 
+/**
+ * generate next state from current state
+ * @param {object} state
+ * @returns {object} object of next state
+ */
 function stepNextState(state) {
   if (state.isConcluded) {
     return state;
   }
+
   const nextGeneration = state.generation + 1;
   const nextBoardResults = step(state.board);
+
   if (!nextBoardResults) {
     return {
       generation: nextGeneration,
@@ -23,35 +30,53 @@ function stepNextState(state) {
       isPlaying: false
     };
   }
+
   const nextState = {
     board: nextBoardResults.board,
     minBoardWidth: nextBoardResults.minBoardWidth,
     minBoardHeight: nextBoardResults.minBoardHeight,
     generation: nextGeneration
   };
+
   if (state.generation === 0) {
     nextState.initialBoard = cloneBoard(state.board);
   }
+
   return nextState;
 }
 
+/**
+ * generate next state on toggle cell from currnet state
+ * @param {object} state
+ * @param {number} r
+ * @param {number} c
+ * @returns {object} object of next state
+ */
 function toggleCellStartValueNextState(state, r, c) {
   const currVal = state.board[r][c];
   const nextVal = currVal ? 0 : 1;
   const nextBoard = setCells(state.board, [[r, c]], nextVal);
-  const nextState = {
-    board: nextBoard
-  };
+  const nextState = { board: nextBoard };
   const nextMinDims = getMinimumAllowableDimensions(nextBoard);
+
   if (nextMinDims[0] !== state.minBoardWidth) {
     nextState.minBoardWidth = nextMinDims[0];
   }
+
   if (nextMinDims[1] !== state.minBoardHeight) {
     nextState.minBoardHeight = nextMinDims[1];
   }
+
   return nextState;
 }
 
+/**
+ * generate new board when resizing
+ * @param {object} state
+ * @param {number} w
+ * @param {number} h
+ * @returns {object} new board
+ */
 function resizeBoardNextState(state, w, h) {
   if (
     w >= config.INITIAL_MIN_BOARD_WIDTH &&
@@ -62,13 +87,15 @@ function resizeBoardNextState(state, w, h) {
     const newBoard = resizeBoard(state.board, w, h);
     return newBoard ? { board: newBoard } : {};
   }
+
   return {};
 }
 
 function life(state = {}, action) {
   switch (action.type) {
     case actionTypes.RESET_BOARD:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         board:
           state.initialBoard ||
           createNewBoard(
@@ -79,36 +106,43 @@ function life(state = {}, action) {
         generation: 0,
         isPlaying: false,
         isConcluded: false
-      });
+      };
+
     case actionTypes.RESIZE_BOARD:
-      return Object.assign(
-        {},
-        state,
-        resizeBoardNextState(state, action.width, action.height)
-      );
+      return {
+        ...state,
+        ...resizeBoardNextState(state, action.width, action.height)
+      };
+
     case actionTypes.PLAY:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isPlaying: true
-      });
+      };
+
     case actionTypes.PAUSE:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         isPlaying: false
-      });
+      };
+
     case actionTypes.STEP:
-      return Object.assign({}, state, stepNextState(state));
+      return {
+        ...state,
+        ...stepNextState(state)
+      };
+
     case actionTypes.TOGGLE_CELL_START_VALUE:
-      return Object.assign(
-        {},
-        state,
-        toggleCellStartValueNextState(state, action.r, action.c)
-      );
+      return {
+        ...state,
+        ...toggleCellStartValueNextState(state, action.r, action.c)
+      };
+
     default:
       return state;
   }
 }
 
-const rootReducer = combineReducers({
-  life
-});
+const rootReducer = combineReducers({ life });
 
 export default rootReducer;
