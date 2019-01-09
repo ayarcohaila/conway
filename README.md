@@ -14,8 +14,6 @@ The initial pattern constitutes the seed of the system. The first generation is 
 5. Eslint
 6. Prettier
 7. Unit Test
-## Demo
-https://supercoder720.github.io/
 ## Setup
 ```
 yarn install
